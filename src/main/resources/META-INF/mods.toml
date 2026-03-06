@@ -61,3 +61,19 @@ mandatory = true
 versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
+
+# KubeJS dependency
+[[dependencies."${mod_id}"]]
+modId = "kubejs"
+mandatory = true
+versionRange = "[2001.6.5,)"
+ordering = "AFTER"
+side = "BOTH"
+
+# Architectury dependency (KubeJS requires this)
+[[dependencies."${mod_id}"]]
+modId = "architectury"
+mandatory = true
+versionRange = "[8.0,)"
+ordering = "AFTER"
+side = "BOTH"
