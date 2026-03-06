@@ -1,4 +1,4 @@
-package dev.ignis.costomvs.kubejs;
+package dev.ignis.valkyrienjs.kubejs;
 
 import net.minecraft.client.Minecraft;
 import org.valkyrienskies.core.api.world.ClientShipWorld;

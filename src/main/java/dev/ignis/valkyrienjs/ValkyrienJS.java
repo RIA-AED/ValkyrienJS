@@ -1,4 +1,4 @@
-package dev.ignis.costomvs;
+package dev.ignis.valkyrienjs;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -6,14 +6,14 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(Costomvs.MODID)
+@Mod(ValkyrienJS.MODID)
 
-public class Costomvs {
+public class ValkyrienJS {
 
-    public static final String MODID = "costomvs";
+    public static final String MODID = "valkyrienjs";
 
     @SuppressWarnings("removal")
-    public Costomvs() {
+    public ValkyrienJS() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);

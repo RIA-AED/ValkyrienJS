@@ -1,9 +1,9 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "dev.ignis.costomvs.mixin",
+  "package": "dev.ignis.valkyrienjs.mixin",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "costomvs.refmap.json",
+  "refmap": "valkyrienjs.refmap.json",
   "mixins": [
   ],
   "client": [

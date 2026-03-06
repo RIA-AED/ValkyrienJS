@@ -1,1 +1,1 @@
-dev.ignis.costomvs.kubejs.VSKubeJSPlugin
+dev.ignis.valkyrienjs.kubejs.VSKubeJSPlugin

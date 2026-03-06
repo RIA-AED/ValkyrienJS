@@ -1,4 +1,4 @@
-package dev.ignis.costomvs.kubejs;
+package dev.ignis.valkyrienjs.kubejs;
 
 import dev.latvian.mods.kubejs.event.EventJS;
 import net.minecraft.core.BlockPos;

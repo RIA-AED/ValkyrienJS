@@ -1,5 +1,6 @@
-package dev.ignis.costomvs.kubejs;
+package dev.ignis.valkyrienjs.kubejs;
 
+import dev.ignis.valkyrienjs.ValkyrienJS;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -11,7 +12,7 @@ import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
  * VS 事件处理器 - 将 VS 事件转发给 KubeJS
  * 基于 org.valkyrienskies.core.api.events 包中的实际事件接口
  */
-@Mod.EventBusSubscriber(modid = dev.ignis.costomvs.Costomvs.MODID)
+@Mod.EventBusSubscriber(modid = ValkyrienJS.MODID)
 public class VSEventHandler {
 
     public static void register() {
