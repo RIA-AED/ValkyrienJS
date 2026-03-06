@@ -7,6 +7,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
 import org.valkyrienskies.core.api.ships.Ship;
@@ -159,5 +160,37 @@ public class VSKubeJSHelper {
         List<Ship> result = new ArrayList<>();
         shipWorld.getAllShips().forEach(result::add);
         return result;
+    }
+
+    /**
+     * 通过 BlockPos 获取飞船，如果该位置不在任何飞船上则返回 null
+     */
+    public static Ship getShipByBlockPos(Level level, BlockPos pos) {
+        return getShipManagingBlock(level, pos);
+    }
+
+    /**
+     * 将飞船上的坐标转换为世界坐标
+     * @param ship 飞船对象
+     * @param shipPos 飞船坐标系中的位置（Minecraft Vec3）
+     * @return 世界坐标，如果 ship 为 null 则返回 null
+     */
+    public static Vec3 shipPosToWorldPos(Ship ship, Vec3 shipPos) {
+        if (ship == null || shipPos == null) {
+            return null;
+        }
+        Vector3d shipPosJoml = new Vector3d(shipPos.x, shipPos.y, shipPos.z);
+        Vector3d worldPos = ship.getShipToWorld().transformPosition(shipPosJoml);
+        return new Vec3(worldPos.x, worldPos.y, worldPos.z);
+    }
+
+    /**
+     * 将飞船上的 BlockPos 转换为世界坐标的 Vec3
+     * @param ship 飞船对象
+     * @param shipBlockPos 飞船坐标系中的 BlockPos
+     * @return 世界坐标的 Vec3，如果 ship 为 null 则返回 null
+     */
+    public static Vec3 shipBlockPosToWorldVec3(Ship ship, BlockPos shipBlockPos) {
+        return shipPosToWorldPos(ship, new Vec3(shipBlockPos.getX(), shipBlockPos.getY(), shipBlockPos.getZ()));
     }
 }
