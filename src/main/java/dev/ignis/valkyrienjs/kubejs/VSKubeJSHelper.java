@@ -1,6 +1,5 @@
 package dev.ignis.valkyrienjs.kubejs;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.Entity;
@@ -67,13 +66,6 @@ public class VSKubeJSHelper {
      */
     public static ServerShipWorld getServerShipWorld(MinecraftServer server) {
         return getApi().getServerShipWorld(server);
-    }
-
-    /**
-     * 获取客户端飞船世界
-     */
-    public static ClientShipWorld getClientShipWorld(Minecraft client) {
-        return getApi().getClientShipWorld(client);
     }
 
     /**
