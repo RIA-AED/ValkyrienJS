@@ -203,9 +203,15 @@ public class BlockLimitAPI {
     // ========== 内部方法 ==========
 
     private static void withLimit(ServerShip ship, Consumer<ShipBlockLimit> action) {
+        LOGGER.debug("[BlockLimit] withLimit called, ship type: {}, is LoadedServerShip: {}",
+                ship.getClass().getName(),
+                ship instanceof LoadedServerShip);
         if (ship instanceof LoadedServerShip loadedShip) {
             ShipBlockLimit limit = ShipBlockLimit.getOrCreate(loadedShip);
             action.accept(limit);
+            LOGGER.debug("[BlockLimit] Limit action executed for ship {}", ship.getId());
+        } else {
+            LOGGER.warn("[BlockLimit] Ship {} is not a LoadedServerShip, cannot set limit", ship.getId());
         }
     }
 

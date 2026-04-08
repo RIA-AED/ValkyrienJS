@@ -2,6 +2,7 @@ package dev.ignis.valkyrienjs.kubejs;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ChunkPos;
@@ -9,12 +10,14 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
+import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.Ship;
 import org.valkyrienskies.core.api.world.ClientShipWorld;
 import org.valkyrienskies.core.api.world.ServerShipWorld;
 import org.valkyrienskies.core.api.world.ShipWorld;
 import org.valkyrienskies.mod.api.VsApi;
 import org.valkyrienskies.mod.common.ValkyrienSkiesMod;
+import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,6 +162,17 @@ public class VSKubeJSHelper {
      */
     public static Ship getShipByBlockPos(Level level, BlockPos pos) {
         return getShipManagingBlock(level, pos);
+    }
+
+    /**
+     * 获取管理指定方块位置的已加载飞船（用于 BlockLimitAPI）
+     * 返回 LoadedServerShip 而不是 Ship，确保可以操作附件
+     */
+    public static LoadedServerShip getLoadedShipManagingBlock(Level level, BlockPos pos) {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return null;
+        }
+        return VSGameUtilsKt.getLoadedShipManagingPos(serverLevel, pos);
     }
 
     /**

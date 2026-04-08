@@ -17,7 +17,7 @@ import java.util.Optional;
         setterVisibility = JsonAutoDetect.Visibility.NONE
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ShipBlockLimit {
+public final class ShipBlockLimit {
 
     public static final String ATTACHMENT_ID = "valkyrienjs:block_limit";
 

@@ -4,13 +4,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BlockLimitEntry {
     @JsonProperty("blockId")
-    private final String blockId;
+    private String blockId;
 
     @JsonProperty("maxCount")
-    private final int maxCount;
+    private int maxCount;
 
     @JsonProperty("currentCount")
     private int currentCount;
+
+    // 无参构造函数用于 Jackson 反序列化
+    @SuppressWarnings("unused")
+    private BlockLimitEntry() {
+    }
 
     public BlockLimitEntry(String blockId, int maxCount) {
         this(blockId, maxCount, 0);

@@ -11,9 +11,7 @@
   "server": [
     "MixinBugFixUtil",
     "RaycastUtilsMixin",
-    "BlockPlacementMixin",
-    "BlockBreakMixin",
-    "BlockOnPlaceMixin"
+    "BlockPlacementMixin"
   ],
   "injectors": {
     "defaultRequire": 1
