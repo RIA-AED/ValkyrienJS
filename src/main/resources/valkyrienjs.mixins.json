@@ -6,7 +6,10 @@
   "refmap": "valkyrienjs.refmap.json",
   "mixins": [
     "MixinBugFixUtil",
-    "RaycastUtilsMixin"
+    "RaycastUtilsMixin",
+    "BlockPlacementMixin",
+    "BlockBreakMixin",
+    "BlockOnPlaceMixin"
   ],
   "client": [
   ],

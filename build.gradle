@@ -178,6 +178,13 @@ dependencies {
     // Kotlin stdlib - required by Valkyrien Skies
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.10'
 
+    // JOML primitives for AABB
+    implementation 'org.joml:joml-primitives:1.10.0'
+
+    // Jackson for JSON serialization
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
+
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
