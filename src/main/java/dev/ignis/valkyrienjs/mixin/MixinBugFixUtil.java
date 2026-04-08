@@ -18,8 +18,9 @@ public class MixinBugFixUtil {
             remap = false
     )
     private void onIsCollisionBoxTooBig(AABB aabb, CallbackInfoReturnable<Boolean> cir) {
-        double volume = aabb.getXsize() * aabb.getYsize() * aabb.getZsize();
-        cir.setReturnValue(volume > Config.maxCollisionBoxVolume);
+        double maxSize = Config.maxCollisionBoxSize;
+        boolean tooBig = aabb.getXsize() > maxSize || aabb.getYsize() > maxSize || aabb.getZsize() > maxSize;
+        cir.setReturnValue(tooBig);
         cir.cancel();
     }
 }

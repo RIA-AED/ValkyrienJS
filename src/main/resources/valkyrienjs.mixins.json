@@ -5,7 +5,8 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "valkyrienjs.refmap.json",
   "mixins": [
-    "MixinBugFixUtil"
+    "MixinBugFixUtil",
+    "RaycastUtilsMixin"
   ],
   "client": [
   ],

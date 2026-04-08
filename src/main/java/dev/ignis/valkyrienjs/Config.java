@@ -9,16 +9,16 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 public class Config {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-    public static final ForgeConfigSpec.LongValue MAX_COLLISION_BOX_VOLUME = BUILDER
-            .comment("Maximum collision box volume threshold (default: 1 billion)")
-            .defineInRange("maxCollisionBoxVolume", 1_000_000_000L, 1L, Long.MAX_VALUE);
+    public static final ForgeConfigSpec.IntValue MAX_COLLISION_BOX_SIZE = BUILDER
+            .comment("Maximum collision box size on any axis (default: 500)")
+            .defineInRange("maxCollisionBoxSize", 500, 1, Integer.MAX_VALUE);
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
-    public static long maxCollisionBoxVolume;
+    public static int maxCollisionBoxSize;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
-        maxCollisionBoxVolume = MAX_COLLISION_BOX_VOLUME.get();
+        maxCollisionBoxSize = MAX_COLLISION_BOX_SIZE.get();
     }
 }
