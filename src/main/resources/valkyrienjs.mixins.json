@@ -5,13 +5,15 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "valkyrienjs.refmap.json",
   "mixins": [
+  ],
+  "client": [
+  ],
+  "server": [
     "MixinBugFixUtil",
     "RaycastUtilsMixin",
     "BlockPlacementMixin",
     "BlockBreakMixin",
     "BlockOnPlaceMixin"
-  ],
-  "client": [
   ],
   "injectors": {
     "defaultRequire": 1

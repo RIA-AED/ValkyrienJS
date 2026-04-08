@@ -1,5 +1,6 @@
 package dev.ignis.valkyrienjs.kubejs;
 
+import dev.ignis.valkyrienjs.feature.blocklimit.BlockLimitAPI;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -31,6 +32,8 @@ public class VSKubeJSPlugin extends KubeJSPlugin {
         
         // 暴露辅助类
         event.add("VSHelper", VSKubeJSHelper.class);
+
+        event.add("VSBlockLimit", BlockLimitAPI.class);
         
         // 客户端专用绑定
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
