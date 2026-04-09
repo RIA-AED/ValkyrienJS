@@ -2,6 +2,7 @@ package dev.ignis.valkyrienjs;
 
 import dev.ignis.valkyrienjs.feature.blocklimit.BlockLimitAPI;
 import dev.ignis.valkyrienjs.feature.blocklimit.ShipBlockLimit;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
@@ -32,12 +33,23 @@ public class ValkyrienJS {
     }
 
     private void registerBlockEvents() {
-        // 方块放置事件
+        // 方块放置事件 - 检查限制并取消放置
         MinecraftForge.EVENT_BUS.addListener((BlockEvent.EntityPlaceEvent event) -> {
-            if (event.getLevel() instanceof ServerLevel level) {
-                BlockState state = event.getPlacedBlock();
-                BlockLimitAPI.onBlockPlaced(level, event.getPos(), state);
+            if (!(event.getLevel() instanceof ServerLevel level)) {
+                return;
             }
+
+            BlockPos pos = event.getPos();
+            BlockState state = event.getPlacedBlock();
+
+            // 检查是否可以放置
+            if (!BlockLimitAPI.canPlaceAt(level, pos, state)) {
+                event.setCanceled(true);
+                return;
+            }
+
+            // 放置成功，增加计数
+            BlockLimitAPI.onBlockPlaced(level, pos, state);
         });
 
         // 方块破坏事件
