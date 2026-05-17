@@ -5,12 +5,12 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "valkyrienjs.refmap.json",
   "mixins": [
+    "MixinEntitySectionStorageFix"
   ],
   "client": [
   ],
   "server": [
-    "MixinBugFixUtil",
-    "RaycastUtilsMixin"
+    "MixinBugFixUtil"
   ],
   "injectors": {
     "defaultRequire": 1

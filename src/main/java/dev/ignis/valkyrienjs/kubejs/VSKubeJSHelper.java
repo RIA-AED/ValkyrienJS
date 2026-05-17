@@ -139,6 +139,38 @@ public class VSKubeJSHelper {
     }
 
     /**
+     * 获取飞船在世界中的 XYZ 欧拉角旋转（角度制）
+     * @return double[3]，分别为 [pitch, yaw, roll]
+     */
+    public static double[] getShipRotationDegrees(Ship ship) {
+        if (ship == null) {
+            return null;
+        }
+        Vector3d euler = ship.getTransform().getShipToWorldRotation()
+                .getEulerAnglesXYZ(new Vector3d());
+        return new double[] {
+                Math.toDegrees(euler.x),
+                Math.toDegrees(euler.y),
+                Math.toDegrees(euler.z)
+        };
+    }
+
+    /**
+     * 获取飞船在世界中的前方向量（船头朝向）
+     * @return 世界坐标系中的单位方向向量，如果 ship 为 null 则返回 null
+     */
+    public static Vec3 getShipForwardVector(Ship ship) {
+        if (ship == null) {
+            return null;
+        }
+        // 船上坐标系中 Z+ 为前方
+        Vector3d forwardInShip = new Vector3d(0.0, 0.0, 1.0);
+        Vector3d forwardInWorld = ship.getShipToWorld()
+                .transformDirection(forwardInShip, new Vector3d());
+        return new Vec3(forwardInWorld.x, forwardInWorld.y, forwardInWorld.z);
+    }
+
+    /**
      * 检查位置是否在飞船场中
      */
     public static boolean isBlockInShipyard(Level level, BlockPos pos) {
