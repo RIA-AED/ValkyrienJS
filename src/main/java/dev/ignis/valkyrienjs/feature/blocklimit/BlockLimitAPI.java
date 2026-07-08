@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class BlockLimitAPI {
     private static final Logger LOGGER = LoggerFactory.getLogger("ValkyrienJS/BlockLimit");
@@ -27,18 +28,34 @@ public class BlockLimitAPI {
     /**
      * 为指定船只设置方块限制
      * 如果该方块已有当前数量记录，保留；否则扫描船上方块初始化 currentCount
+     * @return true 设置成功；false 失败（ship 不可操作、maxCount 为负数、或新限额低于当前已有数量）
      */
-    public static void setLimit(ServerShip ship, String blockId, int maxCount) {
-        withLimit(ship, limit -> {
+    public static boolean setLimit(ServerShip ship, String blockId, int maxCount) {
+        if (maxCount < 0) {
+            LOGGER.warn("[BlockLimit] Cannot set negative maxCount {} for block {} on ship {}", maxCount, blockId, ship.getId());
+            return false;
+        }
+        return withLimitResult(ship, limit -> {
             Map<String, BlockLimitEntry> limits = limit.getBlockLimits();
             BlockLimitEntry existing = limits.get(blockId);
 
             if (existing != null) {
+                if (maxCount < existing.getCurrentCount()) {
+                    LOGGER.warn("[BlockLimit] Cannot lower maxCount from {} to {} for block {} on ship {}: currentCount is {}",
+                            existing.getMaxCount(), maxCount, blockId, ship.getId(), existing.getCurrentCount());
+                    return false;
+                }
                 limits.put(blockId, new BlockLimitEntry(blockId, maxCount, existing.getCurrentCount()));
             } else {
                 int currentCount = scanBlocks(ship, blockId);
+                if (maxCount < currentCount) {
+                    LOGGER.warn("[BlockLimit] Cannot set maxCount {} for block {} on ship {}: scanned {} existing blocks",
+                            maxCount, blockId, ship.getId(), currentCount);
+                    return false;
+                }
                 limits.put(blockId, new BlockLimitEntry(blockId, maxCount, currentCount));
             }
+            return true;
         });
     }
 
@@ -70,14 +87,27 @@ public class BlockLimitAPI {
 
     /**
      * 更新最大数量（保留当前计数）
+     * @return true 更新成功；false 失败（ship 不可操作、限制不存在、maxCount 为负数、或新限额低于当前已有数量）
      */
-    public static void updateMaxCount(ServerShip ship, String blockId, int maxCount) {
-        withLimit(ship, limit -> {
+    public static boolean updateMaxCount(ServerShip ship, String blockId, int maxCount) {
+        if (maxCount < 0) {
+            LOGGER.warn("[BlockLimit] Cannot set negative maxCount {} for block {} on ship {}", maxCount, blockId, ship.getId());
+            return false;
+        }
+        return withLimitResult(ship, limit -> {
             Map<String, BlockLimitEntry> limits = limit.getBlockLimits();
             BlockLimitEntry entry = limits.get(blockId);
-            if (entry != null) {
-                limits.put(blockId, new BlockLimitEntry(blockId, maxCount, entry.getCurrentCount()));
+            if (entry == null) {
+                LOGGER.warn("[BlockLimit] No existing limit for block {} on ship {}", blockId, ship.getId());
+                return false;
             }
+            if (maxCount < entry.getCurrentCount()) {
+                LOGGER.warn("[BlockLimit] Cannot lower maxCount from {} to {} for block {} on ship {}: currentCount is {}",
+                        entry.getMaxCount(), maxCount, blockId, ship.getId(), entry.getCurrentCount());
+                return false;
+            }
+            limits.put(blockId, new BlockLimitEntry(blockId, maxCount, entry.getCurrentCount()));
+            return true;
         });
     }
 
@@ -213,6 +243,18 @@ public class BlockLimitAPI {
         } else {
             LOGGER.warn("[BlockLimit] Ship {} is not a LoadedServerShip, cannot set limit", ship.getId());
         }
+    }
+
+    /**
+     * 带返回值的 withLimit：如果 ship 不是 LoadedServerShip 返回 false，否则执行 action 并返回其结果
+     */
+    private static boolean withLimitResult(ServerShip ship, Function<ShipBlockLimit, Boolean> action) {
+        if (ship instanceof LoadedServerShip loadedShip) {
+            ShipBlockLimit limit = ShipBlockLimit.getOrCreate(loadedShip);
+            return action.apply(limit);
+        }
+        LOGGER.warn("[BlockLimit] Ship {} is not a LoadedServerShip, cannot set limit", ship.getId());
+        return false;
     }
 
     /**
