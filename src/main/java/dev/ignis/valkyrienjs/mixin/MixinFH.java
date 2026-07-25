@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.lang.reflect.Field;
@@ -14,7 +15,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Mixin for FH class - handles physics frame queue backpressure
  * FH.e is ConcurrentLinkedQueue<FL> - the physics frame queue
  * When the physics thread stalls and then resumes, this queue accumulates frames.
- * This mixin clears the backlog to restore real-time sync.
+ * This mixin:
+ * 1. Clears the backlog when severely backpressured to restore real-time sync
+ * 2. Prevents Thread.sleep from blocking the physics thread
+ * 3. Throttles log output to prevent console spam
  */
 @Mixin(value = org.valkyrienskies.core.impl.shadow.FH.class, remap = false)
 public class MixinFH {
@@ -24,7 +28,9 @@ public class MixinFH {
     private static boolean initialized = false;
     private static int clearCount = 0;
     private static long lastLogTime = 0;
-    private static final long LOG_INTERVAL_MS = 5000; // Log at most every 5 seconds
+    private static final long LOG_INTERVAL_MS = 10000; // Log at most every 10 seconds
+    private static long lastWarnLogTime = 0;
+    private static final long WARN_LOG_INTERVAL_MS = 30000; // Warn at most every 30 seconds
 
     static {
         LOGGER.info("[ValkyrienJS] MixinFH static initializer started");
@@ -86,7 +92,7 @@ public class MixinFH {
         int size = queue.size();
         long now = System.currentTimeMillis();
 
-        // Throttled logging for queue size monitoring
+        // Throttled logging for queue size monitoring (every 10 seconds)
         if (now - lastLogTime > LOG_INTERVAL_MS) {
             lastLogTime = now;
             if (size > 0) {
@@ -100,14 +106,61 @@ public class MixinFH {
             clearCount++;
             Thread currentThread = Thread.currentThread();
 
-            LOGGER.warn("[ValkyrienJS] Physics thread detected severe physics frame queue backpressure! " +
-                "Clearing {} backed-up physics frames (clearCount={}). " +
-                "Current thread: {} (ID: {}), Timestamp: {}. " +
-                "This indicates the physics stage was stalled and is now resuming. " +
-                "The queue will be cleared to restore real-time synchronization.",
-                size, clearCount, currentThread.getName(), currentThread.getId(), now);
+            // Only log warning every 30 seconds to prevent console spam
+            if (now - lastWarnLogTime > WARN_LOG_INTERVAL_MS) {
+                lastWarnLogTime = now;
+                LOGGER.warn("[ValkyrienJS] Physics thread detected severe physics frame queue backpressure! " +
+                    "Clearing {} backed-up physics frames (clearCount={}). " +
+                    "Current thread: {} (ID: {}), Timestamp: {}. " +
+                    "This indicates the physics stage was stalled and is now resuming. " +
+                    "The queue will be cleared to restore real-time synchronization.",
+                    size, clearCount, currentThread.getName(), currentThread.getId(), now);
+            } else {
+                // Debug log for intermediate clears
+                LOGGER.debug("[ValkyrienJS] Clearing {} physics frames (clearCount={}, totalDrops={})",
+                    size, clearCount, clearCount);
+            }
 
             queue.clear();
+        }
+    }
+
+    /**
+     * Redirect Thread.sleep calls in FH.a(FL) to prevent blocking the physics thread.
+     * When the physics frame queue is full, VS2 would sleep for 1 second.
+     * But since we're actively clearing frames, this sleep is unnecessary.
+     */
+    @Redirect(
+        method = "a",
+        at = @At(
+            value = "INVOKE",
+            target = "Ljava/lang/Thread;sleep(J)V",
+            remap = false
+        ),
+        remap = false,
+        require = 0
+    )
+    private void redirectSleep(long millis) {
+        // Only skip sleep if our mixin is initialized and queue is backpressured
+        if (initialized) {
+            try {
+                ConcurrentLinkedQueue<?> queue = getQueue(this);
+                if (queue != null && queue.size() > 100) {
+                    // Queue is backpressured, skip sleep to keep physics thread responsive
+                    LOGGER.debug("[ValkyrienJS] Skipping Thread.sleep({}ms) because " +
+                        "physics frame queue is backpressured (size={})", millis, queue.size());
+                    return;
+                }
+            } catch (Exception e) {
+                // If anything goes wrong, fall through to normal sleep
+            }
+        }
+        
+        // Normal case: call the original sleep
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 }
