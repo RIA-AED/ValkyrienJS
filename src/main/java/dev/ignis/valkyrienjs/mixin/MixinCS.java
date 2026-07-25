@@ -16,7 +16,6 @@ public class MixinCS {
      */
     @Overwrite
     public boolean getShouldUnload() {
-        LOGGER.debug("[ValkyrienJS] Preventing ship unload - getShouldUnload() overridden to return false");
         return false;
     }
 }
