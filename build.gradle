@@ -133,6 +133,11 @@ tasks.named('processResources', ProcessResources).configure {
             def mixinFHMappings = [
                 "onPhysicsFrameProcess": "Lorg/valkyrienskies/core/impl/shadow/FH;a()V"
             ]
+            
+            // Add manual mappings for MixinFQ (game frame queue handler)
+            def mixinFQMappings = [
+                "onPostTickGame": "Lorg/valkyrienskies/core/impl/shadow/FQ;postTickGame()V"
+            ]
 
             if (!refmap.mappings) refmap.mappings = [:]
             if (!refmap.data) refmap.data = [:]
@@ -143,11 +148,14 @@ tasks.named('processResources', ProcessResources).configure {
             
             refmap.mappings["dev/ignis/valkyrienjs/mixin/MixinFH"] = mixinFHMappings
             refmap.data.searge["dev/ignis/valkyrienjs/mixin/MixinFH"] = mixinFHMappings
+            
+            refmap.mappings["dev/ignis/valkyrienjs/mixin/MixinFQ"] = mixinFQMappings
+            refmap.data.searge["dev/ignis/valkyrienjs/mixin/MixinFQ"] = mixinFQMappings
 
             def outputFile = file("build/resources/main/valkyrienjs.refmap.json")
             outputFile.parentFile.mkdirs()
             outputFile.text = groovy.json.JsonOutput.toJson(refmap)
-            println "Merged refmap with MixinFN and MixinFH mappings"
+            println "Merged refmap with MixinFN, MixinFH and MixinFQ mappings"
         }
     }
 }

@@ -8,7 +8,7 @@
     "MixinEntitySectionStorageFix",
     "MixinFN",
     "MixinFH",
-    "MixinCS"
+    "MixinCS",\n    "MixinFQ"
   ],
   "client": [
   ],
