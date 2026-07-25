@@ -3,7 +3,6 @@ package dev.ignis.valkyrienjs.mixin;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -53,7 +52,6 @@ public class MixinFN {
     }
 
     // 注入到物理线程 tick 方法 a(double, boolean) 开头
-    // 使用更宽松的匹配方式
     @Inject(
         method = "a(DZ)Lorg/valkyrienskies/core/impl/shadow/FL;",
         at = @At("HEAD"),
@@ -119,32 +117,5 @@ public class MixinFN {
             LOGGER.warn("[ValkyrienJS] Game frame queue backpressure detected! Current queue size: {} (threshold: 800). Current thread: {} (ID: {}). This indicates the physics stage is running slower than the game stage, causing game frames to accumulate in the queue.", 
                 size, currentThread.getName(), currentThread.getId());
         }
-    }
-
-    // 替换原来的 warn 日志调用 - 在 a(FG) 方法中
-    @org.spongepowered.asm.mixin.injection.ModifyVariable(
-        method = "a(Lorg/valkyrienskies/core/impl/shadow/FG;)V",
-        at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;warn(Ljava/lang/String;)V"),
-        remap = false,
-        require = 0
-    )
-    private String modifyWarnMessage(String originalMessage) {
-        LOGGER.info("[ValkyrienJS] modifyWarnMessage called! Original: {}", originalMessage);
-        
-        if (!initialized) {
-            return originalMessage;
-        }
-        
-        ConcurrentLinkedQueue<?> queue = getQueue(this);
-        int queueSize = queue != null ? queue.size() : -1;
-        Thread currentThread = Thread.currentThread();
-        
-        String enhancedMessage = String.format(
-            "[ValkyrienJS] Game frame queue backpressure detected! Current queue size: %d (threshold: 800). Current thread: %s (ID: %d). This indicates the physics stage is running slower than the game stage, causing game frames to accumulate in the queue. Original message: %s",
-            queueSize, currentThread.getName(), currentThread.getId(), originalMessage
-        );
-        
-        LOGGER.warn(enhancedMessage);
-        return enhancedMessage;
     }
 }

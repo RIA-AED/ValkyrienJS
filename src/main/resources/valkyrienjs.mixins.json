@@ -6,7 +6,8 @@
   "refmap": "valkyrienjs.refmap.json",
   "mixins": [
     "MixinEntitySectionStorageFix",
-    "MixinFN"
+    "MixinFN",
+    "MixinCS"
   ],
   "client": [
   ],
