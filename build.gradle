@@ -167,6 +167,11 @@ dependencies {
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
     // The group id is ignored when searching -- in this case, it is "blank"
     // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
+    // Valkyrien Skies dependencies - use compileOnly for Mixin annotation processor to access classes
+    compileOnly files("libs/valkyrienskies-120-2.4.11.jar")
+    compileOnly files("libs/api-1.1.0+1d4a7373e9.jar")
+    
+    // Runtime dependencies (deobfuscated for game)
     implementation fg.deobf(files("libs/valkyrienskies-120-2.4.11.jar"))
     implementation fg.deobf(files("libs/api-1.1.0+1d4a7373e9.jar"))
     
@@ -190,6 +195,10 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    
+    // Add VS2 jars to annotation processor classpath for Mixin refmap generation
+    annotationProcessor files("libs/valkyrienskies-120-2.4.11.jar")
+    annotationProcessor files("libs/api-1.1.0+1d4a7373e9.jar")
 
 }
 
