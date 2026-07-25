@@ -27,9 +27,9 @@ public class MixinFN {
             initialized = true;
             LOGGER.info("[ValkyrienJS] MixinFN initialized successfully, field 'b' found: {}", queueField);
         } catch (NoSuchFieldException e) {
-            LOGGER.error("[ValkyrienJS] Failed to find field '{}' in FN class", FIELD_NAME, e);
+            LOGGER.debug("[ValkyrienJS] Failed to find field '{}' in FN class", FIELD_NAME, e);
         } catch (Exception e) {
-            LOGGER.error("[ValkyrienJS] Unexpected error in MixinFN static initializer", e);
+            LOGGER.debug("[ValkyrienJS] Unexpected error in MixinFN static initializer", e);
         }
     }
 
@@ -46,7 +46,7 @@ public class MixinFN {
             }
             return queue;
         } catch (IllegalAccessException e) {
-            LOGGER.error("[ValkyrienJS] Failed to access field '{}'", FIELD_NAME, e);
+            LOGGER.debug("[ValkyrienJS] Failed to access field '{}'", FIELD_NAME, e);
             return null;
         }
     }
