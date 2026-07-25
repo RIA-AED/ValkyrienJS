@@ -167,7 +167,7 @@ dependencies {
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
     // The group id is ignored when searching -- in this case, it is "blank"
     // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
-    implementation fg.deobf(files("libs/valkyrienskies-120-2.4.10.jar"))
+    implementation fg.deobf(files("libs/valkyrienskies-120-2.4.11.jar"))
     implementation fg.deobf(files("libs/api-1.1.0+1d4a7373e9.jar"))
     
     // KubeJS dependencies
