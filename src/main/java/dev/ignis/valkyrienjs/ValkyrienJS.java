@@ -4,6 +4,8 @@ import dev.ignis.valkyrienjs.feature.blocklimit.BlockLimitAPI;
 import dev.ignis.valkyrienjs.feature.blocklimit.ShipBlockLimit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.BlockEvent;
@@ -45,6 +47,15 @@ public class ValkyrienJS {
             // 检查是否可以放置
             if (!BlockLimitAPI.canPlaceAt(level, pos, state)) {
                 event.setCanceled(true);
+
+                // 将方块返还给玩家
+                if (event.getEntity() instanceof Player player) {
+                    ItemStack returnStack = new ItemStack(state.getBlock().asItem());
+                    if (!player.addItem(returnStack)) {
+                        player.drop(returnStack, false);
+                    }
+                }
+
                 return;
             }
 
