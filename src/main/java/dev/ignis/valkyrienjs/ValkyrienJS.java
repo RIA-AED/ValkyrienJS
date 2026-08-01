@@ -47,15 +47,6 @@ public class ValkyrienJS {
             // 检查是否可以放置
             if (!BlockLimitAPI.canPlaceAt(level, pos, state)) {
                 event.setCanceled(true);
-
-                // 将方块返还给玩家
-                if (event.getEntity() instanceof Player player) {
-                    ItemStack returnStack = new ItemStack(state.getBlock().asItem());
-                    if (!player.addItem(returnStack)) {
-                        player.drop(returnStack, false);
-                    }
-                }
-
                 return;
             }
 
