@@ -1,6 +1,7 @@
 package dev.ignis.valkyrienjs;
 
 import dev.ignis.valkyrienjs.feature.blocklimit.BlockLimitAPI;
+import dev.ignis.valkyrienjs.command.BlockLimitCommand;
 import dev.ignis.valkyrienjs.feature.blocklimit.ShipBlockLimit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -9,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -32,6 +34,8 @@ public class ValkyrienJS {
 
         // 注册 Forge 事件监听
         registerBlockEvents();
+        MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) ->
+                BlockLimitCommand.register(event.getDispatcher()));
     }
 
     private void registerBlockEvents() {

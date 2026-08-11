@@ -124,13 +124,17 @@ public class BlockLimitAPI {
     }
 
     /**
-     * 检查是否可以放置
+     * 检查是否可以放置。缓存达到上限时以船上实际方块数校准一次，
+     * 避免爆炸、活塞或其他模组直接改方块造成的计数滞留。
      */
     public static boolean canPlace(ServerShip ship, String blockId) {
-        return ShipBlockLimit.get(ship)
-                .map(l -> l.getBlockLimits().get(blockId))
-                .map(BlockLimitEntry::canPlace)
-                .orElse(true);
+        Optional<BlockLimitEntry> entry = getLimit(ship, blockId);
+        if (entry.isEmpty() || entry.get().canPlace()) {
+            return true;
+        }
+
+        entry.get().setCurrentCount(scanBlocks(ship, blockId));
+        return entry.get().canPlace();
     }
 
     /**

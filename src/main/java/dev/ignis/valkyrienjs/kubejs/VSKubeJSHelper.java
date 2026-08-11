@@ -70,6 +70,18 @@ public class VSKubeJSHelper {
     public static ServerShipWorld getServerShipWorld(MinecraftServer server) {
         return getApi().getServerShipWorld(server);
     }
+    /**
+     * 检查服务端飞船世界中是否仍存在指定飞船。
+     * getAllShips 同时包含已加载和已卸载的飞船，因此只有被彻底删除的飞船才返回 false。
+     */
+    public static boolean shipExists(MinecraftServer server, long shipId) {
+        if (server == null) {
+            return false;
+        }
+        ServerShipWorld shipWorld = getServerShipWorld(server);
+        return shipWorld != null && shipWorld.getAllShips().getById(shipId) != null;
+    }
+
 
     /**
      * 获取指定世界的飞船世界
