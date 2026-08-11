@@ -77,3 +77,11 @@ mandatory = true
 versionRange = "[8.0,)"
 ordering = "AFTER"
 side = "BOTH"
+
+# CBC compatibility mixin target
+[[dependencies."${mod_id}"]]
+modId = "createbigcannons"
+mandatory = true
+versionRange = "[5.11.1,5.12)"
+ordering = "AFTER"
+side = "BOTH"

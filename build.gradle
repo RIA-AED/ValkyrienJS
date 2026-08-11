@@ -169,6 +169,8 @@ dependencies {
     // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
     implementation fg.deobf(files("libs/valkyrienskies-120-2.4.10.jar"))
     implementation fg.deobf(files("libs/api-1.1.0+1d4a7373e9.jar"))
+    // Compile-only CBC API for the VS ship-impact compatibility mixin. CBC is supplied by the modpack at runtime.
+    compileOnly files("D:/Minecraft/Servers/FST_1201/Client/.minecraft/versions/Katabasis/mods/createbigcannons-5.11.1-mc.1.20.1-forge.jar")
     
     // KubeJS dependencies
     implementation fg.deobf(files("libs/architectury-9.2.14-forge.jar"))
