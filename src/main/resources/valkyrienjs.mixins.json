@@ -10,7 +10,8 @@
   ],
   "server": [
     "MixinAbstractCannonProjectile",
-    "MixinBugFixUtil"
+    "MixinBugFixUtil",
+    "MixinServerPlayerPositionRestore"
   ],
   "injectors": {
     "defaultRequire": 1

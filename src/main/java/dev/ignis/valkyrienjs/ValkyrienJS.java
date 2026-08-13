@@ -3,6 +3,7 @@ package dev.ignis.valkyrienjs;
 import dev.ignis.valkyrienjs.feature.blocklimit.BlockLimitAPI;
 import dev.ignis.valkyrienjs.command.BlockLimitCommand;
 import dev.ignis.valkyrienjs.feature.blocklimit.ShipBlockLimit;
+import dev.ignis.valkyrienjs.feature.player.ShipPlayerPositionHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -34,6 +35,7 @@ public class ValkyrienJS {
 
         // 注册 Forge 事件监听
         registerBlockEvents();
+        MinecraftForge.EVENT_BUS.register(new ShipPlayerPositionHandler());
         MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent event) ->
                 BlockLimitCommand.register(event.getDispatcher()));
     }
