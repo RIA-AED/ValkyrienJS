@@ -5,13 +5,13 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "valkyrienjs.refmap.json",
   "mixins": [
+    "MixinAbstractCannonProjectile",
+    "MixinBugFixUtil",
+    "MixinServerPlayerPositionRestore"
   ],
   "client": [
   ],
   "server": [
-    "MixinAbstractCannonProjectile",
-    "MixinBugFixUtil",
-    "MixinServerPlayerPositionRestore"
   ],
   "injectors": {
     "defaultRequire": 1
