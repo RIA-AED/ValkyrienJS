@@ -6,6 +6,7 @@
   "refmap": "valkyrienjs.refmap.json",
   "mixins": [
     "MixinAbstractCannonProjectile",
+    "MixinProximityFuze",
     "MixinBugFixUtil",
     "MixinServerPlayerPositionRestore"
   ],
